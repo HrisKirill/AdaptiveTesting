@@ -1,0 +1,56 @@
+CREATE TABLE topics
+(
+    id   BIGSERIAL PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL
+
+);
+
+CREATE TABLE questions
+(
+    id         BIGSERIAL PRIMARY KEY,
+    text       TEXT   NOT NULL,
+    difficulty INT    NOT NULL,
+    topic_id   BIGINT NOT NULL,
+    FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE answer_options
+(
+    id          BIGSERIAL PRIMARY KEY,
+    text        TEXT    NOT NULL,
+    is_correct  BOOLEAN NOT NULL,
+    question_id BIGINT  NOT NULL,
+    FOREIGN KEY (question_id) REFERENCES questions (id) ON DELETE CASCADE
+);
+
+CREATE TABLE users
+(
+    id       BIGSERIAL PRIMARY KEY,
+    email    VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255)        NOT NULL
+);
+
+
+CREATE TABLE test_sessions
+(
+    id       BIGSERIAL PRIMARY KEY,
+    user_id  BIGINT        NOT NULL,
+    topic_id BIGINT        NOT NULL,
+    score    NUMERIC(4, 2) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE user_answers
+(
+    id               BIGSERIAL PRIMARY KEY,
+    session_id       BIGINT  NOT NULL,
+    question_id      BIGINT  NOT NULL,
+    answer_option_id BIGINT  NOT NULL,
+    is_correct       BOOLEAN NOT NULL,
+    FOREIGN KEY (session_id) REFERENCES test_sessions (id) ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES questions (id) ON DELETE CASCADE,
+    FOREIGN KEY (answer_option_id) REFERENCES answer_options (id) ON DELETE CASCADE
+);
