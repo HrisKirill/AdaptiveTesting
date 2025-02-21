@@ -17,8 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Service
@@ -31,35 +29,32 @@ public class ExcelParserService implements ParserService {
     @Override
     public void parseAndSave(MultipartFile file, String topicName) throws Exception {
         try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
-            Set<AnswerOption> answerOptions = new HashSet<>();
             Sheet sheet = workbook.getSheetAt(0);
             Topic topic = topicService.createIfNotExistsByName(topicName);
 
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue;
-
                 String questionText = row.getCell(0).getStringCellValue().trim();
                 String optionsRaw = row.getCell(1).getStringCellValue().trim();
                 String correctAnswer = row.getCell(2).getStringCellValue().trim();
                 BigDecimal difficulty = BigDecimal.valueOf(row.getCell(3).getNumericCellValue());
                 BigDecimal discrimination = BigDecimal.valueOf(row.getCell(4).getNumericCellValue());
 
-
                 String[] options = optionsRaw.split("\\|");
-                BigDecimal guessing = BigDecimal.ONE.divide(BigDecimal.valueOf(options.length + 1), RoundingMode.HALF_UP);
-                Question question = new Question(questionText, difficulty, guessing, discrimination, topic);
-                question = questionService.create(question);
+                System.out.println("options length: " + options.length);
+                BigDecimal guessing = BigDecimal.ONE.divide(BigDecimal.valueOf(options.length + 1), 2, RoundingMode.HALF_UP);
 
+                Question question = new Question(questionText, difficulty, guessing, discrimination, topic);
 
                 for (String optionText : options) {
-                    AnswerOption answerOption = new AnswerOption(optionText.trim(), false, question);
-                    answerOptions.add(answerOption);
+                    AnswerOption answerOption = new AnswerOption(optionText.trim(), false);
+                    question.addOption(answerOption);
                 }
-                answerOptions.add(new AnswerOption(correctAnswer.trim(), true, question));
+                question.addOption(new AnswerOption(correctAnswer.trim(), true));
 
+                questionService.create(question);
             }
 
-            answerOptionService.saveAll(answerOptions);
         }
     }
 }

@@ -1,8 +1,8 @@
-package com.khrystoforov.adaptivetesting.session;
+package com.khrystoforov.adaptivetesting.session.model;
 
 import com.khrystoforov.adaptivetesting.topic.model.Topic;
 import com.khrystoforov.adaptivetesting.user.User;
-import com.khrystoforov.adaptivetesting.userAnswer.UserAnswer;
+import com.khrystoforov.adaptivetesting.userAnswer.model.UserAnswer;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "test_sessions")
@@ -25,8 +26,8 @@ import java.util.List;
 @NoArgsConstructor
 public class TestSession {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -39,4 +40,9 @@ public class TestSession {
     private BigDecimal currentTheta = BigDecimal.ZERO;
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
     private List<UserAnswer> answers;
+
+    public TestSession(User user, Topic topic) {
+        this.user = user;
+        this.topic = topic;
+    }
 }

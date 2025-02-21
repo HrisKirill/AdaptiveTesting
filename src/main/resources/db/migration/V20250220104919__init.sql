@@ -25,20 +25,23 @@ CREATE TABLE answer_options
     FOREIGN KEY (question_id) REFERENCES questions (id) ON DELETE CASCADE
 );
 
+CREATE TYPE USER_ROLES AS ENUM ('USER', 'TEACHER');
+
 CREATE TABLE users
 (
     id       BIGSERIAL PRIMARY KEY,
     email    VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255)        NOT NULL
+    password VARCHAR(255)        NOT NULL,
+    role     USER_ROLES          NOT NULL
 );
 
 
 CREATE TABLE test_sessions
 (
-    id           BIGSERIAL PRIMARY KEY,
-    user_id      BIGINT         NOT NULL,
-    topic_id     BIGINT         NOT NULL,
-    score        DECIMAL(4, 2)  NOT NULL,
+    id            UUID PRIMARY KEY,
+    user_id       BIGINT         NOT NULL,
+    topic_id      BIGINT         NOT NULL,
+    score         DECIMAL(4, 2)  NOT NULL,
     current_theta DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
@@ -48,10 +51,9 @@ CREATE TABLE test_sessions
 CREATE TABLE user_answers
 (
     id               BIGSERIAL PRIMARY KEY,
-    session_id       BIGINT  NOT NULL,
+    session_id       UUID  NOT NULL,
     question_id      BIGINT  NOT NULL,
     answer_option_id BIGINT  NOT NULL,
-    is_correct       BOOLEAN NOT NULL,
     FOREIGN KEY (session_id) REFERENCES test_sessions (id) ON DELETE CASCADE,
     FOREIGN KEY (question_id) REFERENCES questions (id) ON DELETE CASCADE,
     FOREIGN KEY (answer_option_id) REFERENCES answer_options (id) ON DELETE CASCADE
