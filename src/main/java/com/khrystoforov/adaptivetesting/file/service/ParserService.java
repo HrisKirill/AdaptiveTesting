@@ -4,5 +4,5 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ParserService {
 
-    void parseAndSave(MultipartFile file) throws Exception;
+    void parseAndSave(MultipartFile file, String topicName) throws Exception;
 }

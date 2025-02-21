@@ -2,15 +2,16 @@ CREATE TABLE topics
 (
     id   BIGSERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL
-
 );
 
 CREATE TABLE questions
 (
-    id         BIGSERIAL PRIMARY KEY,
-    text       TEXT   NOT NULL,
-    difficulty INT    NOT NULL,
-    topic_id   BIGINT NOT NULL,
+    id             BIGSERIAL PRIMARY KEY,
+    text           TEXT    NOT NULL,
+    difficulty     DECIMAL NOT NULL,
+    discrimination DECIMAL NOT NULL,
+    guessing       DECIMAL NOT NULL,
+    topic_id       BIGINT  NOT NULL,
     FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
 );
 
@@ -34,10 +35,11 @@ CREATE TABLE users
 
 CREATE TABLE test_sessions
 (
-    id       BIGSERIAL PRIMARY KEY,
-    user_id  BIGINT        NOT NULL,
-    topic_id BIGINT        NOT NULL,
-    score    NUMERIC(4, 2) NOT NULL,
+    id           BIGSERIAL PRIMARY KEY,
+    user_id      BIGINT         NOT NULL,
+    topic_id     BIGINT         NOT NULL,
+    score        DECIMAL(4, 2)  NOT NULL,
+    current_theta DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
 );

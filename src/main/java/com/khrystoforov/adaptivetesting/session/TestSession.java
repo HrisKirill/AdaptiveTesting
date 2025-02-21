@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 @Entity
 @Table(name = "test_sessions")
 @Data
+@NoArgsConstructor
 public class TestSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +34,9 @@ public class TestSession {
     @JoinColumn(name = "topic_id")
     private Topic topic;
     @Column(nullable = false, precision = 4, scale = 2)
-    private BigDecimal score;
+    private BigDecimal score = BigDecimal.ZERO;
+    @Column(nullable = false)
+    private BigDecimal currentTheta = BigDecimal.ZERO;
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
     private List<UserAnswer> answers;
 }

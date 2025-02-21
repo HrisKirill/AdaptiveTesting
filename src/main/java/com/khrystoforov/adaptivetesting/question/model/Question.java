@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "questions")
 @Getter
@@ -29,14 +31,20 @@ public class Question {
     @Column(nullable = false)
     private String text;
     @Column(nullable = false)
-    private Integer difficulty;
+    private BigDecimal difficulty;
+    @Column(nullable = false)
+    private BigDecimal discrimination;
+    @Column(nullable = false)
+    private BigDecimal guessing;
     @ManyToOne
     @JoinColumn(name = "topic_id")
     private Topic topic;
 
-    public Question(String text, Integer difficulty, Topic topic) {
+    public Question(String text, BigDecimal difficulty, BigDecimal guessing, BigDecimal discrimination, Topic topic) {
         this.text = text;
         this.difficulty = difficulty;
+        this.guessing = guessing;
         this.topic = topic;
+        this.discrimination = discrimination;
     }
 }

@@ -18,13 +18,16 @@ public class FileUploadController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void uploadFile(@RequestParam("file") MultipartFile file) {
+    public void uploadFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(name = "topicName") String topicName
+    ) {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File cannot be empty");
         }
 
         try {
-            excelParserService.parseAndSave(file);
+            excelParserService.parseAndSave(file, topicName);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
