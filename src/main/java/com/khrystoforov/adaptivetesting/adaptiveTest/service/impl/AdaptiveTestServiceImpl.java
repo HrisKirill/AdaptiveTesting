@@ -9,7 +9,9 @@ import com.khrystoforov.adaptivetesting.question.dto.response.QuestionResponseDt
 import com.khrystoforov.adaptivetesting.question.mapper.QuestionMapper;
 import com.khrystoforov.adaptivetesting.question.model.Question;
 import com.khrystoforov.adaptivetesting.question.service.QuestionService;
+import com.khrystoforov.adaptivetesting.session.dto.response.FinalScoreResponseDto;
 import com.khrystoforov.adaptivetesting.session.dto.response.SessionResponseDto;
+import com.khrystoforov.adaptivetesting.session.mapper.SessionMapper;
 import com.khrystoforov.adaptivetesting.session.model.TestSession;
 import com.khrystoforov.adaptivetesting.session.service.TestSessionService;
 import com.khrystoforov.adaptivetesting.topic.model.Topic;
@@ -84,6 +86,18 @@ public class AdaptiveTestServiceImpl implements AdaptiveTestService {
         testSessionService.saveSession(session);
 
         return new UserAnswerResponseDto(userResponse.getResponse());
+    }
+
+    @Override
+    public FinalScoreResponseDto calculateFinalScore(Long userId, UUID sessionId) {
+        TestSession session = testSessionService.getSessionByIdAndUserId(sessionId, userId);
+        BigDecimal finalTheta = session.getCurrentTheta();
+        BigDecimal finalScore = BigDecimal.valueOf(50)
+                .add(finalTheta.multiply(BigDecimal.TEN))
+                .setScale(2, RoundingMode.HALF_UP);
+        session.setScore(finalScore);
+        session = testSessionService.saveSession(session);
+        return SessionMapper.toFinalScoreResponseDto(session);
     }
 
     private BigDecimal updateTheta(BigDecimal theta, boolean isCorrect, Question question) {

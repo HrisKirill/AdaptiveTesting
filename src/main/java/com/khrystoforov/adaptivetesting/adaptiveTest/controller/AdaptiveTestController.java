@@ -2,6 +2,7 @@ package com.khrystoforov.adaptivetesting.adaptiveTest.controller;
 
 import com.khrystoforov.adaptivetesting.adaptiveTest.service.AdaptiveTestService;
 import com.khrystoforov.adaptivetesting.question.dto.response.QuestionResponseDto;
+import com.khrystoforov.adaptivetesting.session.dto.response.FinalScoreResponseDto;
 import com.khrystoforov.adaptivetesting.session.dto.response.SessionResponseDto;
 import com.khrystoforov.adaptivetesting.userAnswer.dto.request.UserAnswerRequestDto;
 import com.khrystoforov.adaptivetesting.userAnswer.dto.response.UserAnswerResponseDto;
@@ -45,4 +46,13 @@ public class AdaptiveTestController {
             @Valid @RequestBody UserAnswerRequestDto userResponse) {
         return adaptiveTestService.submitAnswer(userId, sessionId, userResponse);
     }
+
+    @GetMapping("/{userId}/result/{sessionId}")
+    public FinalScoreResponseDto getFinalScore(
+            @PathVariable Long userId,
+            @PathVariable UUID sessionId
+    ) {
+        return adaptiveTestService.calculateFinalScore(userId, sessionId);
+    }
+
 }
