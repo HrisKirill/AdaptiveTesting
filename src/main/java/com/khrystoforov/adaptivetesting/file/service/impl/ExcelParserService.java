@@ -1,13 +1,13 @@
 package com.khrystoforov.adaptivetesting.file.service.impl;
 
 import com.khrystoforov.adaptivetesting.answerOption.model.AnswerOption;
-import com.khrystoforov.adaptivetesting.answerOption.service.AnswerOptionService;
 import com.khrystoforov.adaptivetesting.file.service.ParserService;
 import com.khrystoforov.adaptivetesting.question.model.Question;
 import com.khrystoforov.adaptivetesting.question.service.QuestionService;
 import com.khrystoforov.adaptivetesting.topic.model.Topic;
 import com.khrystoforov.adaptivetesting.topic.service.TopicService;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -24,7 +24,6 @@ import java.math.RoundingMode;
 public class ExcelParserService implements ParserService {
     private final TopicService topicService;
     private final QuestionService questionService;
-    private final AnswerOptionService answerOptionService;
 
     @Override
     public void parseAndSave(MultipartFile file, String topicName) throws Exception {
@@ -34,17 +33,17 @@ public class ExcelParserService implements ParserService {
 
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue;
-                String questionText = row.getCell(0).getStringCellValue().trim();
-                String optionsRaw = row.getCell(1).getStringCellValue().trim();
-                String correctAnswer = row.getCell(2).getStringCellValue().trim();
-                BigDecimal difficulty = BigDecimal.valueOf(row.getCell(3).getNumericCellValue());
-                BigDecimal discrimination = BigDecimal.valueOf(row.getCell(4).getNumericCellValue());
+                String questionText = getCellValue(row, 0);
+                String optionsRaw = getCellValue(row, 1);
+                String correctAnswer = getCellValue(row, 2);
+                BigDecimal difficulty = new BigDecimal(getCellValue(row, 3));
+                BigDecimal validatedDifficulty = difficulty.min(BigDecimal.valueOf(2.0)).max(BigDecimal.valueOf(-2.0));
+                BigDecimal discrimination = new BigDecimal(getCellValue(row, 4));
 
                 String[] options = optionsRaw.split("\\|");
-                System.out.println("options length: " + options.length);
                 BigDecimal guessing = BigDecimal.ONE.divide(BigDecimal.valueOf(options.length + 1), 2, RoundingMode.HALF_UP);
 
-                Question question = new Question(questionText, difficulty, guessing, discrimination, topic);
+                Question question = new Question(questionText, validatedDifficulty, guessing, discrimination, topic);
 
                 for (String optionText : options) {
                     AnswerOption answerOption = new AnswerOption(optionText.trim(), false);
@@ -56,5 +55,10 @@ public class ExcelParserService implements ParserService {
             }
 
         }
+    }
+
+    private static String getCellValue(Row row, int columnIndex) {
+        Cell cell = row.getCell(columnIndex, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+        return (cell == null) ? "" : cell.toString().trim();
     }
 }
