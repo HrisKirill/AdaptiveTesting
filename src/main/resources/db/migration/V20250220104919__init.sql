@@ -41,7 +41,7 @@ CREATE TABLE test_sessions
     id            UUID PRIMARY KEY,
     user_id       BIGINT         NOT NULL,
     topic_id      BIGINT         NOT NULL,
-    score         DECIMAL(4, 2)  NOT NULL,
+    score         DECIMAL(5, 2)  NOT NULL,
     current_theta DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
