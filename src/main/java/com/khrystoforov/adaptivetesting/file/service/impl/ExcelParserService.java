@@ -40,7 +40,7 @@ public class ExcelParserService implements ParserService {
                 BigDecimal validatedDifficulty = difficulty.min(BigDecimal.valueOf(2.0)).max(BigDecimal.valueOf(-2.0));
                 BigDecimal discrimination = new BigDecimal(getCellValue(row, 4));
 
-                String[] options = optionsRaw.split("\\|");
+                String[] options = optionsRaw.split(";");
                 BigDecimal guessing = BigDecimal.ONE.divide(BigDecimal.valueOf(options.length + 1), 2, RoundingMode.HALF_UP);
 
                 Question question = new Question(questionText, validatedDifficulty, guessing, discrimination, topic);

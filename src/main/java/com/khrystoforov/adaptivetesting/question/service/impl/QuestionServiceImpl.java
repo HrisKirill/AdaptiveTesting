@@ -22,6 +22,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question getWithMinDifficultyDifference(BigDecimal theta) {
+        theta = theta.max(BigDecimal.ZERO).min(BigDecimal.ONE);
         return repository.findClosestQuestion(theta)
                 .orElseThrow(() -> new EntityNotFoundException("No available questions"));
     }

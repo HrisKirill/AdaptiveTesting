@@ -42,7 +42,7 @@ CREATE TABLE test_sessions
     user_id       BIGINT         NOT NULL,
     topic_id      BIGINT         NOT NULL,
     score         DECIMAL(5, 2)  NOT NULL,
-    current_theta DECIMAL(10, 2) NOT NULL,
+    current_theta DECIMAL(10, 2) NOT NULL DEFAULT 0.5,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
 );

@@ -37,7 +37,7 @@ public class TestSession {
     @Column(nullable = false, precision = 4, scale = 2)
     private BigDecimal score = BigDecimal.ZERO;
     @Column(nullable = false)
-    private BigDecimal currentTheta = BigDecimal.ZERO;
+    private BigDecimal currentTheta = BigDecimal.valueOf(0.5);
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
     private List<UserAnswer> answers;
 

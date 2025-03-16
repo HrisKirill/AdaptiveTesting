@@ -91,29 +91,31 @@ public class AdaptiveTestServiceImpl implements AdaptiveTestService {
     @Override
     public FinalScoreResponseDto calculateFinalScore(Long userId, UUID sessionId) {
         TestSession session = testSessionService.getSessionByIdAndUserId(sessionId, userId);
-        BigDecimal finalTheta = session.getCurrentTheta();
-        BigDecimal finalScore = BigDecimal.valueOf(50)
-                .add(finalTheta.multiply(BigDecimal.TEN))
-                .setScale(2, RoundingMode.HALF_UP);
+        BigDecimal finalTheta = session.getCurrentTheta().max(BigDecimal.ZERO).min(BigDecimal.ONE);
+        BigDecimal finalScore = finalTheta.multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
         session.setScore(finalScore);
         session = testSessionService.saveSession(session);
         return SessionMapper.toFinalScoreResponseDto(session);
     }
 
     private BigDecimal updateTheta(BigDecimal theta, boolean isCorrect, Question question) {
-        BigDecimal a = question.getDiscrimination();
-        BigDecimal b = question.getDifficulty();
+        BigDecimal b = question.getDifficulty().min(BigDecimal.ONE).max(BigDecimal.ZERO);
+        BigDecimal c = question.getGuessing();
 
-        BigDecimal exponent = a.multiply(theta.subtract(b)).negate(); // -a * (theta - b)
-        BigDecimal probability = BigDecimal.ONE.divide(
-                BigDecimal.ONE.add(BigDecimal.valueOf(Math.exp(exponent.doubleValue()))),
-                MathContext.DECIMAL128
+        BigDecimal exponent = theta.subtract(b).negate();
+        BigDecimal probability = c.add(
+                BigDecimal.ONE.subtract(c).multiply(
+                        BigDecimal.ONE.divide(
+                                BigDecimal.ONE.add(BigDecimal.valueOf(Math.exp(exponent.doubleValue()))),
+                                MathContext.DECIMAL128
+                        )
+                )
         );
 
         BigDecimal correctness = isCorrect ? BigDecimal.ONE : BigDecimal.ZERO;
-        BigDecimal step = a.multiply(correctness.subtract(probability));
-
-        return theta.add(step).setScale(6, RoundingMode.HALF_UP);
+        BigDecimal step = correctness.subtract(probability);
+        BigDecimal scaleFactor = isCorrect ? new BigDecimal("0.15") : new BigDecimal("0.08");
+        BigDecimal updateStep = step.multiply(scaleFactor);
+        return theta.add(updateStep);
     }
-
 }
