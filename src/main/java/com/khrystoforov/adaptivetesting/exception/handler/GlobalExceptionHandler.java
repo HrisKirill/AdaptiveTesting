@@ -3,6 +3,7 @@ package com.khrystoforov.adaptivetesting.exception.handler;
 import com.khrystoforov.adaptivetesting.exception.EntityExistsException;
 import com.khrystoforov.adaptivetesting.exception.EntityNotFoundException;
 import com.khrystoforov.adaptivetesting.exception.ErrorResponse;
+import com.khrystoforov.adaptivetesting.exception.MaxQuestionsAnsweredException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -27,6 +28,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EntityExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleException(EntityExistsException ex) {
+        log.error(ex.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+    }
+
+    @ExceptionHandler(MaxQuestionsAnsweredException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleException(MaxQuestionsAnsweredException ex) {
         log.error(ex.getMessage());
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
