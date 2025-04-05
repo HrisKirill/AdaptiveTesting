@@ -1,7 +1,7 @@
 package com.khrystoforov.adaptivetesting.session.model;
 
 import com.khrystoforov.adaptivetesting.topic.model.Topic;
-import com.khrystoforov.adaptivetesting.user.User;
+import com.khrystoforov.adaptivetesting.user.model.User;
 import com.khrystoforov.adaptivetesting.userAnswer.model.UserAnswer;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

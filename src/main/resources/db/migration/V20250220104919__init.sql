@@ -30,8 +30,8 @@ CREATE TYPE USER_ROLES AS ENUM ('USER', 'TEACHER');
 CREATE TABLE users
 (
     id       BIGSERIAL PRIMARY KEY,
-    email    VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255)        NOT NULL,
+    email    TEXT UNIQUE NOT NULL,
+    password TEXT        NOT NULL,
     role     USER_ROLES          NOT NULL
 );
 
@@ -57,4 +57,13 @@ CREATE TABLE user_answers
     FOREIGN KEY (session_id) REFERENCES test_sessions (id) ON DELETE CASCADE,
     FOREIGN KEY (question_id) REFERENCES questions (id) ON DELETE CASCADE,
     FOREIGN KEY (answer_option_id) REFERENCES answer_options (id) ON DELETE CASCADE
+);
+
+CREATE TABLE refresh_tokens
+(
+    id         UUID PRIMARY KEY,
+    user_id    BIGSERIAL NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );

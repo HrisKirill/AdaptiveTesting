@@ -1,6 +1,7 @@
 package com.khrystoforov.adaptivetesting.file.controller;
 
 import com.khrystoforov.adaptivetesting.file.service.impl.ExcelParserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,12 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/upload")
+@RequiredArgsConstructor
 public class FileUploadController {
     private final ExcelParserService excelParserService;
-
-    public FileUploadController(ExcelParserService excelParserService) {
-        this.excelParserService = excelParserService;
-    }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void uploadFile(

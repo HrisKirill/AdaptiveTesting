@@ -16,7 +16,7 @@ import com.khrystoforov.adaptivetesting.session.model.TestSession;
 import com.khrystoforov.adaptivetesting.session.service.TestSessionService;
 import com.khrystoforov.adaptivetesting.topic.model.Topic;
 import com.khrystoforov.adaptivetesting.topic.service.TopicService;
-import com.khrystoforov.adaptivetesting.user.User;
+import com.khrystoforov.adaptivetesting.user.model.User;
 import com.khrystoforov.adaptivetesting.user.service.UserService;
 import com.khrystoforov.adaptivetesting.userAnswer.dto.request.UserAnswerRequestDto;
 import com.khrystoforov.adaptivetesting.userAnswer.dto.response.UserAnswerResponseDto;

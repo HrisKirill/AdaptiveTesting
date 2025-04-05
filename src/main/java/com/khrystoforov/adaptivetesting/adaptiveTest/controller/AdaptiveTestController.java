@@ -4,6 +4,8 @@ import com.khrystoforov.adaptivetesting.adaptiveTest.service.AdaptiveTestService
 import com.khrystoforov.adaptivetesting.question.dto.response.QuestionResponseDto;
 import com.khrystoforov.adaptivetesting.session.dto.response.FinalScoreResponseDto;
 import com.khrystoforov.adaptivetesting.session.dto.response.SessionResponseDto;
+import com.khrystoforov.adaptivetesting.user.model.User;
+import com.khrystoforov.adaptivetesting.user.service.UserService;
 import com.khrystoforov.adaptivetesting.userAnswer.dto.request.UserAnswerRequestDto;
 import com.khrystoforov.adaptivetesting.userAnswer.dto.response.UserAnswerResponseDto;
 import jakarta.validation.Valid;
@@ -22,37 +24,32 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdaptiveTestController {
     private final AdaptiveTestService adaptiveTestService;
+    private final UserService userService;
 
-    @PostMapping("/{userId}/start/{topicName}")
-    public SessionResponseDto startTest(
-            @PathVariable Long userId,
-            @PathVariable String topicName
-    ) {
-        return adaptiveTestService.startTest(userId, topicName);
+    @PostMapping("/start/{topicName}")
+    public SessionResponseDto startTest(@PathVariable String topicName) {
+        User user = userService.getCurrentUser();
+        return adaptiveTestService.startTest(user.getId(), topicName);
     }
 
-    @GetMapping("/{userId}/session/{sessionId}/next-question")
-    public QuestionResponseDto getNextQuestion(
-            @PathVariable Long userId,
-            @PathVariable UUID sessionId
-    ) {
-        return adaptiveTestService.selectNextQuestion(userId, sessionId);
+    @GetMapping("/session/{sessionId}/next-question")
+    public QuestionResponseDto getNextQuestion(@PathVariable UUID sessionId) {
+        User user = userService.getCurrentUser();
+        return adaptiveTestService.selectNextQuestion(user.getId(), sessionId);
     }
 
-    @PostMapping("/{userId}/session/{sessionId}/answer")
+    @PostMapping("/session/{sessionId}/answer")
     public UserAnswerResponseDto submitAnswer(
-            @PathVariable Long userId,
             @PathVariable UUID sessionId,
             @Valid @RequestBody UserAnswerRequestDto userResponse) {
-        return adaptiveTestService.submitAnswer(userId, sessionId, userResponse);
+        User user = userService.getCurrentUser();
+        return adaptiveTestService.submitAnswer(user.getId(), sessionId, userResponse);
     }
 
-    @GetMapping("/{userId}/result/{sessionId}")
-    public FinalScoreResponseDto getFinalScore(
-            @PathVariable Long userId,
-            @PathVariable UUID sessionId
-    ) {
-        return adaptiveTestService.calculateFinalScore(userId, sessionId);
+    @GetMapping("/result/{sessionId}")
+    public FinalScoreResponseDto getFinalScore(@PathVariable UUID sessionId) {
+        User user = userService.getCurrentUser();
+        return adaptiveTestService.calculateFinalScore(user.getId(), sessionId);
     }
 
 }
