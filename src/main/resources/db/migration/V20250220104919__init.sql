@@ -9,7 +9,6 @@ CREATE TABLE questions
     id             BIGSERIAL PRIMARY KEY,
     text           TEXT    NOT NULL,
     difficulty     DECIMAL NOT NULL,
-    discrimination DECIMAL NOT NULL,
     guessing       DECIMAL NOT NULL,
     topic_id       BIGINT  NOT NULL,
     FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE

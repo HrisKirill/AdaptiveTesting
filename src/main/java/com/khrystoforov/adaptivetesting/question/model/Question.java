@@ -38,8 +38,6 @@ public class Question {
     @Column(nullable = false)
     private BigDecimal difficulty;
     @Column(nullable = false)
-    private BigDecimal discrimination;
-    @Column(nullable = false)
     private BigDecimal guessing;
     @ManyToOne
     @JoinColumn(name = "topic_id")
@@ -64,12 +62,10 @@ public class Question {
     public Question(String text,
                     BigDecimal difficulty,
                     BigDecimal guessing,
-                    BigDecimal discrimination,
                     Topic topic) {
         this.text = text;
         this.difficulty = difficulty;
         this.guessing = guessing;
         this.topic = topic;
-        this.discrimination = discrimination;
     }
 }
