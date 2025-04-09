@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) {
         log.info("Get user by email {}", email);
         return repository.findByEmail(email)
-                .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException(String.format("User not found with email %s", email)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User not found with email %s", email)));
     }
 
     @Override

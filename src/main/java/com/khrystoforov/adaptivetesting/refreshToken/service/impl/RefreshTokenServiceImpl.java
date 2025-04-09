@@ -1,10 +1,10 @@
 package com.khrystoforov.adaptivetesting.refreshToken.service.impl;
 
+import com.khrystoforov.adaptivetesting.exception.EntityNotFoundException;
 import com.khrystoforov.adaptivetesting.refreshToken.model.RefreshToken;
 import com.khrystoforov.adaptivetesting.refreshToken.repository.RefreshTokenRepository;
 import com.khrystoforov.adaptivetesting.refreshToken.service.RefreshTokenService;
 import com.khrystoforov.adaptivetesting.user.model.User;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

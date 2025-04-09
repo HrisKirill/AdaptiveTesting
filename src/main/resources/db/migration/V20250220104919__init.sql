@@ -24,14 +24,12 @@ CREATE TABLE answer_options
     FOREIGN KEY (question_id) REFERENCES questions (id) ON DELETE CASCADE
 );
 
-CREATE TYPE USER_ROLES AS ENUM ('USER', 'TEACHER');
-
 CREATE TABLE users
 (
     id       BIGSERIAL PRIMARY KEY,
     email    TEXT UNIQUE NOT NULL,
     password TEXT        NOT NULL,
-    role     USER_ROLES          NOT NULL
+    role     TEXT          NOT NULL
 );
 
 
